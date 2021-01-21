@@ -4,7 +4,7 @@
 // ======================
 //  PUERTO
 // ======================
-
+// este puerto nos lo ofrece HEROKU
 process.env.PORT = process.env.PORT || 3000; 
 
 
