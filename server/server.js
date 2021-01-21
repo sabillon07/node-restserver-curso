@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
 require('./config/config')
 
 // parse application/x-www-form-urlencoded
@@ -9,39 +10,21 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.use( require('./config/routers/usuario'))
 
-app.get('/',((req,res)=>{
-    res.json('get')
-}))
+// CAFE ES UN NOMBRE QUE EN CASO DE QUE NO HAYAMOS CREADO ESA DB
+// MONGOOSE SE VA A ENCARGAR DE CREARLA Y TODA SU ESTRUCTURA
+mongoose.connect(process.env.urlDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  useCreateIndex: true
+},(err)=>{
+    if (err) throw err;
 
-app.post('/usuario/:id',((req,res)=>{
-    let id = req.params.id
-    res.json({
-        id
-    })
-}))
-
-
-app.put('/usuario',((req,res)=>{
-    let body = req.body
-
-    if(body.nombre === undefined){
-        res.status(400).json({
-            ok : false,
-            msj : 'El nombre no se encuentra'
-        })
-    }else{
-        res.json({
-            usuario : body
-        })
-        
-    }
-}))
-
-
-app.delete('/',((req,res)=>{
-    res.json('delete mundo')
-}))
+    console.log('CONECTAMOS CON EXITO PRRITOOO!!');
+});
 
 
 app.listen(process.env.PORT,()=>{
