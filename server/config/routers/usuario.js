@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const Usuario = require('../models/usuario')
 const bcrypt = require('bcrypt')
+const {validarToken, validarAdminRole} = require('../middleware/autenticacion')
 
 const eliminarCampos = ( obj, arr=[] )=>{
     let x = 0;
@@ -15,7 +16,9 @@ const eliminarCampos = ( obj, arr=[] )=>{
     return newBody
 }
 
-app.get('/usuario',((req,res)=>{
+app.get('/usuario',validarToken,((req,res)=>{
+
+   
    
     let limitePorPagina = req.query.limite || 5;
     limitePorPagina = Number(limitePorPagina);
@@ -47,7 +50,7 @@ app.get('/usuario',((req,res)=>{
 
 
 
-app.put('/usuario/:id',((req,res)=>{
+app.put('/usuario/:id',[validarToken,validarAdminRole],((req,res)=>{
     
   
      let id = req.params.id
@@ -62,7 +65,10 @@ app.put('/usuario/:id',((req,res)=>{
                 err
             })
         }
-        usuarioDB.password = null;
+         if(usuarioDB.password){
+             usuarioDB.password = null;
+         }
+            
         res.json({
             ok : true,
             usuario : usuarioDB
@@ -74,7 +80,7 @@ app.put('/usuario/:id',((req,res)=>{
 }))
 
 
-app.post('/usuario',((req,res)=>{
+app.post('/usuario',[validarToken,validarAdminRole],((req,res)=>{
   let body = req.body
 
     let usuario = new Usuario({
@@ -103,7 +109,7 @@ app.post('/usuario',((req,res)=>{
 }))
 
 
-app.delete('/usuario/:id',((req,res)=>{
+app.delete('/usuario/:id',[validarToken,validarAdminRole],((req,res)=>{
     let id = req.params.id
 
     // Usuario.findByIdAndRemove(id,(err,usuarioBorrado)=>{

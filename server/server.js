@@ -10,7 +10,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use( require('./config/routers/usuario'))
+// Configuración global de rutas
+app.use(require('./config/routers/index'))
 
 // CAFE ES UN NOMBRE QUE EN CASO DE QUE NO HAYAMOS CREADO ESA DB
 // MONGOOSE SE VA A ENCARGAR DE CREARLA Y TODA SU ESTRUCTURA
@@ -18,8 +19,7 @@ mongoose.connect(process.env.urlDB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
-  useCreateIndex: true,
-  useCreateIndex: true
+  useCreateIndex: true  
 },(err)=>{
     if (err) throw err;
 
