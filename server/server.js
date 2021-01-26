@@ -2,13 +2,21 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
+const path = require('path')
 require('./config/config')
+
+
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
  
 // parse application/json
 app.use(bodyParser.json())
+
+// HABILITAR LA CARPETA PUBLIC
+app.use( express.static( path.resolve(__dirname,'../public')))
+
 
 // Configuración global de rutas
 app.use(require('./config/routers/index'))
